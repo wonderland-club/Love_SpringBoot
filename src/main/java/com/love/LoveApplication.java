@@ -17,7 +17,6 @@ public class LoveApplication {
 		SpringApplication.run(LoveApplication.class, args);
 	}
 
-
 	@GetMapping("/api/k")
 	public ResponseEntity<Map<String,String>> k() {
 		Map<String,String> stringStringMap = new HashMap<>();
