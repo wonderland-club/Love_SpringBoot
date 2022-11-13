@@ -50,7 +50,7 @@ public class ShiroConfig {
 
     // 自定义Realm，需要查询相关权限信息的时候，Realm帮我们处理
     @Bean
-    public UserRealm userRealm(){
+    public UserRealm userRealm() {
         return new UserRealm();
     }
 

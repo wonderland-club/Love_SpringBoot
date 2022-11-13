@@ -12,7 +12,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 
 public class UserRealm extends AuthorizingRealm {
@@ -53,4 +52,6 @@ public class UserRealm extends AuthorizingRealm {
 
         return null;
     }
+
+
 }
