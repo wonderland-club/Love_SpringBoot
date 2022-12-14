@@ -103,7 +103,10 @@ public class AddressBook_controller {
     //    根据email查询用户有无伴侣
     @GetMapping("/check_if_there_is_a_binding")
     public ResponseEntity<Boolean> Check_if_there_is_a_binding(@RequestParam(value = "email") String email) {
-        // with_or_without_binding  有伴侣返回true 无伴侣返回false
+        // with_or_without_binding  有伴侣返回true 无伴侣返回false 该邮箱不存在返回 null
+        if (with_or_without_binding(email)==null){
+            return ResponseEntity.ok().body(null);
+        }
         if (with_or_without_binding(email)) {
             return ResponseEntity.ok().body(true);
         }
@@ -145,7 +148,7 @@ public class AddressBook_controller {
     /*function*/
     //    根据email 判断此用户有无伴侣
     public Boolean with_or_without_binding(String email) {
-        //1.判断用户是否存在
+        //1.判断用户是否存在  不存在返回null
         //2.得到对面的id
         //3.在查询此 user_love 伴侣表中有无 伴侣
         //4.有伴侣返回true 无伴侣返回false
@@ -161,7 +164,7 @@ public class AddressBook_controller {
             //4.
             return user_loves_list.get(0).getLoveId() != null;
         }
-        return false;
+        return null;
     }
 
     /*function*/
