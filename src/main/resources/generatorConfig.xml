@@ -16,7 +16,7 @@
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/love?characterEncoding=utf-8&amp;useSSL=true"
                         userId="root"
-                        password="123456">
+                        password="12345678">
         </jdbcConnection>
         <!--4、配置Oracle数据库连接的信息：驱动类、连接地址、用户名、密码 -->
         <!-- <jdbcConnection driverClass="oracle.jdbc.OracleDriver" connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:yycg"
@@ -68,5 +68,7 @@
         <table tableName="small_notes" domainObjectName="Small_notes"/>
         <table tableName="important_history" domainObjectName="Important_history"/>
         <table tableName="companion_pplication_list" domainObjectName="Companion_pplication_list"/>
+        <table tableName="scenes" domainObjectName="Scenes"/>
+
     </context>
 </generatorConfiguration>

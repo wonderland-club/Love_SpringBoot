@@ -4,6 +4,7 @@ import com.love.Mapper.Companion_pplication_listMapper;
 import com.love.Mapper.UserMapper;
 import com.love.Mapper.User_loveMapper;
 import com.love.module.*;
+import com.love.returnClass.ApplicationList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -32,6 +29,7 @@ public class AddressBook_controller {
     Companion_pplication_listExample.Criteria Companion_pplication_list_criteria;
     //用户
     @Autowired
+
     UserMapper userMapper;
     UserExample userExample;
     UserExample.Criteria user_Criteria;
@@ -40,6 +38,7 @@ public class AddressBook_controller {
     User_loveMapper user_loveMapper;
     User_loveExample user_loveExample;
     User_loveExample.Criteria user_love_criteria;
+
 
     /*API*/
     //    申请绑定情侣关系
@@ -102,15 +101,33 @@ public class AddressBook_controller {
     /*API*/
     //    根据email查询用户有无伴侣
     @GetMapping("/check_if_there_is_a_binding")
-    public ResponseEntity<Boolean> Check_if_there_is_a_binding(@RequestParam(value = "email") String email) {
+    public ResponseEntity<String> Check_if_there_is_a_binding(@RequestParam(value = "email") String email) {
         // with_or_without_binding  有伴侣返回true 无伴侣返回false 该邮箱不存在返回 null
-        if (with_or_without_binding(email)==null){
-            return ResponseEntity.ok().body(null);
+        if (with_or_without_binding(email) == null) {
+            return ResponseEntity.ok().body("null");
         }
         if (with_or_without_binding(email)) {
-            return ResponseEntity.ok().body(true);
+            return ResponseEntity.ok().body("true");
         }
-        return ResponseEntity.ok().body(false);
+        return ResponseEntity.ok().body("false");
+    }
+
+    //    查询当前用户的伴侣申请
+    @GetMapping("/WievUserApplication")
+    public ResponseEntity<List<ApplicationList>> WievUserApplication(@RequestParam(value = "email") String email) {
+        int id = emailToId(email);
+        List<ApplicationList> objectList = companion_pplication_listMapper.ApplicationList(id);
+        for (int i = 0; i < objectList.size(); i++) {
+           int user_id = objectList.get(i).getUser_id();
+            objectList.get(i).setEmail_userName_gender(idToClass(user_id));
+        }
+        return ResponseEntity.ok(objectList);
+    }
+
+    //    根据email 查询id
+    @GetMapping("emailToId")
+    public ResponseEntity<Integer> emailToIdHttp(@RequestParam(value = "email") String email) {
+        return ResponseEntity.ok(emailToId(email));
     }
 
     /*function*/
@@ -143,6 +160,13 @@ public class AddressBook_controller {
         }
         //邮箱重复
         return httpBody_error_ok_Bound_email_same[3];
+    }
+
+
+    //function 根据email返回ID
+    public int emailToId(String email) {
+        List<User> id = userMapper.emailToId(email);
+        return id.get(0).getId();
     }
 
     /*function*/
@@ -180,4 +204,17 @@ public class AddressBook_controller {
         }
         return null;
     }
+
+    public User idToClass(Integer id) {
+        userExample = new UserExample();
+        user_Criteria = userExample.createCriteria();
+        user_Criteria.andIdEqualTo(id);
+        List<User> userList = userMapper.selectByExample(userExample);
+        if (userList.size() > 0) {
+            return userList.get(0);
+        }
+        return null;
+    }
+
 }
+
